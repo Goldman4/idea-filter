@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Filter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero">
+      <p class="eyebrow">First prototype</p>
+      <h1>Idea Filter</h1>
+      <p class="intro">Evaluate a digital product idea before you spend time building it. Fill in the form, then get a simple score, recommendation, weak points, and next steps.</p>
+    </section>
+
+    <section class="app-card" aria-label="Idea evaluation form">
+      <form id="ideaForm" class="idea-form">
+        <div class="field-group">
+          <label for="ideaName">Idea name</label>
+          <input id="ideaName" name="ideaName" type="text" placeholder="English speaking practice bot" required>
+        </div>
+
+        <div class="field-group">
+          <label for="ideaDescription">Idea description</label>
+          <textarea id="ideaDescription" name="ideaDescription" rows="4" placeholder="What will this product do?" required></textarea>
+        </div>
+
+        <div class="field-group">
+          <label for="targetAudience">Target audience</label>
+          <input id="targetAudience" name="targetAudience" type="text" placeholder="Beginner English learners" required>
+        </div>
+
+        <div class="field-group">
+          <label for="userPain">User pain or problem</label>
+          <textarea id="userPain" name="userPain" rows="3" placeholder="What painful problem does this solve?" required></textarea>
+        </div>
+
+        <div class="field-group">
+          <label for="monetization">Possible monetization</label>
+          <input id="monetization" name="monetization" type="text" placeholder="Subscription, one-time payment, course upsell" required>
+        </div>
+
+        <div class="slider-grid">
+          <div class="field-group range-field">
+            <label for="personalInterest">Personal interest: <span id="interestValue">5</span>/10</label>
+            <input id="personalInterest" name="personalInterest" type="range" min="1" max="10" value="5">
+          </div>
+
+          <div class="field-group range-field">
+            <label for="confidence">Information confidence: <span id="confidenceValue">5</span>/10</label>
+            <input id="confidence" name="confidence" type="range" min="1" max="10" value="5">
+          </div>
+        </div>
+
+        <button type="submit">Evaluate idea</button>
+      </form>
+
+      <aside id="results" class="results is-hidden" aria-live="polite">
+        <p class="eyebrow">Result</p>
+        <div class="score-row">
+          <span id="score" class="score">0</span>
+          <span class="score-label">/100</span>
+        </div>
+        <h2 id="recommendation">Recommendation</h2>
+        <p id="explanation" class="explanation"></p>
+
+        <div class="result-list">
+          <h3>Weak points</h3>
+          <ul id="weakPoints"></ul>
+        </div>
+
+        <div class="result-list">
+          <h3>Next steps</h3>
+          <ul id="nextSteps"></ul>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
