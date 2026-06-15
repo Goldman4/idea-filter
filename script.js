@@ -14,7 +14,7 @@ const minimumUsefulLengths = {
   ideaDescription: 60,
   targetAudience: 20,
   userPain: 35,
-  monetization: 12,
+  monetization: 28,
 };
 
 function updateRangeLabel(input, output) {
@@ -43,28 +43,45 @@ function getFormValues() {
   };
 }
 
+function isMonetizationVague(value) {
+  const trimmedValue = value.trim().toLowerCase();
+  const wordCount = trimmedValue.split(/\s+/).filter(Boolean).length;
+  const vagueTerms = ['maybe', 'not sure', 'unknown', 'tbd', 'ads', 'subscription', 'freemium', 'donations'];
+
+  return (
+    trimmedValue.length < minimumUsefulLengths.monetization ||
+    wordCount < 4 ||
+    vagueTerms.some((term) => trimmedValue === term)
+  );
+}
+
 function evaluateIdea(values) {
   const criteria = {
     description: getTextScore(values.ideaDescription, minimumUsefulLengths.ideaDescription),
     audience: getTextScore(values.targetAudience, minimumUsefulLengths.targetAudience),
     pain: getTextScore(values.userPain, minimumUsefulLengths.userPain),
     monetization: getTextScore(values.monetization, minimumUsefulLengths.monetization),
+    monetizationIsVague: isMonetizationVague(values.monetization),
     interest: values.personalInterest,
     confidence: values.confidence,
   };
 
   const weightedScore =
-    criteria.description * 1.5 +
-    criteria.audience * 2 +
-    criteria.pain * 2.5 +
+    criteria.description * 1.2 +
+    criteria.audience * 1.5 +
+    criteria.pain * 2 +
     criteria.monetization * 1.5 +
-    criteria.interest * 1.5 +
-    criteria.confidence * 1;
+    criteria.interest * 1 +
+    criteria.confidence * 2.8;
 
-  const score = Math.round(weightedScore);
+  const confidencePenalty = criteria.confidence <= 6 ? (6 - criteria.confidence) * 2 : 0;
+  const monetizationPenalty = criteria.monetizationIsVague ? 4 : 0;
+  const rawScore = Math.max(0, Math.round(weightedScore - confidencePenalty - monetizationPenalty));
+  const confidenceScoreCap = criteria.confidence <= 6 ? 54 + criteria.confidence * 4 : 100;
+  const score = Math.min(rawScore, confidenceScoreCap);
   const weakPoints = getWeakPoints(criteria);
   const nextSteps = getNextSteps(criteria, values.ideaName);
-  const recommendation = getRecommendation(score, weakPoints.length);
+  const recommendation = getRecommendation(score);
 
   return {
     score,
@@ -75,12 +92,12 @@ function evaluateIdea(values) {
   };
 }
 
-function getRecommendation(score, weakPointCount) {
-  if (score >= 75 && weakPointCount <= 2) {
+function getRecommendation(score) {
+  if (score >= 80) {
     return { label: 'Do it', className: 'recommend-do' };
   }
 
-  if (score >= 45) {
+  if (score >= 55) {
     return { label: 'Improve it', className: 'recommend-improve' };
   }
 
@@ -116,20 +133,33 @@ function getWeakPoints(criteria) {
     weakPoints.push('The first version of the idea needs a clearer and simpler description.');
   }
 
-  if (criteria.monetization < 7) {
-    weakPoints.push('The monetization path is still vague or untested.');
+  if (criteria.monetizationIsVague) {
+    weakPoints.push('The business model is unclear because the monetization plan is too vague or short.');
+  } else if (criteria.monetization < 7) {
+    weakPoints.push('The monetization path is still untested.');
   }
 
   if (criteria.interest < 6) {
     weakPoints.push('Your personal interest is low, which may make the idea harder to finish.');
   }
 
-  if (criteria.confidence < 6) {
-    weakPoints.push('Your confidence in the information is low, so more research is needed.');
+  if (criteria.confidence <= 6) {
+    weakPoints.push('Missing validation: information confidence is 6/10 or lower, so the idea needs more evidence from real users or market research.');
   }
 
-  if (weakPoints.length === 0) {
-    weakPoints.push('No major weak points found for this first prototype evaluation.');
+  const allCriteriaAreStrong =
+    criteria.description >= 8 &&
+    criteria.audience >= 8 &&
+    criteria.pain >= 8 &&
+    criteria.monetization >= 8 &&
+    !criteria.monetizationIsVague &&
+    criteria.interest >= 8 &&
+    criteria.confidence >= 8;
+
+  if (weakPoints.length === 0 && allCriteriaAreStrong) {
+    weakPoints.push('No major weak points found: the audience, pain, business model, interest, and confidence are all strong.');
+  } else if (weakPoints.length === 0) {
+    weakPoints.push('The idea is reasonable, but at least one criterion is not strong enough yet to treat it as fully validated.');
   }
 
   return weakPoints;
@@ -147,15 +177,20 @@ function getNextSteps(criteria, ideaName) {
     steps.push('Talk to 3 potential users and ask how they currently solve this problem.');
   }
 
-  if (criteria.monetization < 7) {
-    steps.push('List 2 simple ways someone might pay for this product.');
+  if (criteria.monetizationIsVague || criteria.monetization < 7) {
+    steps.push('Check whether users already pay for similar solutions.');
+    steps.push('Write one clear sentence explaining who pays, how much, and why.');
   }
 
-  if (criteria.confidence < 6) {
-    steps.push('Find real examples, competitors, forum posts, or user comments that prove the need exists.');
+  if (criteria.confidence <= 6) {
+    steps.push('Find 3 existing alternatives and note what users like or dislike about them.');
+    steps.push('Collect real examples, forum posts, reviews, or user comments that prove the need exists.');
+  } else {
+    steps.push('Find 3 existing alternatives and compare their audience, pricing, and main promise.');
   }
 
-  steps.push(`Define the smallest useful first version of ${name}.`);
+  steps.push('Interview 3 potential users before building anything large.');
+  steps.push(`Define the smallest testable version of ${name}.`);
   steps.push('Choose one validation task you can finish this week.');
 
   return steps;
