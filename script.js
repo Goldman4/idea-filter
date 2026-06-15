@@ -5,6 +5,12 @@ const recommendationOutput = document.querySelector('#recommendation');
 const explanationOutput = document.querySelector('#explanation');
 const weakPointsOutput = document.querySelector('#weakPoints');
 const nextStepsOutput = document.querySelector('#nextSteps');
+const suggestedMvpOutput = document.querySelector('#suggestedMvp');
+const futureFeaturesOutput = document.querySelector('#futureFeatures');
+const userMotivationOutput = document.querySelector('#userMotivation');
+const marketEntryOutput = document.querySelector('#marketEntry');
+const keyRisksOutput = document.querySelector('#keyRisks');
+const validationQuestionsOutput = document.querySelector('#validationQuestions');
 const interestInput = document.querySelector('#personalInterest');
 const confidenceInput = document.querySelector('#confidence');
 const interestValue = document.querySelector('#interestValue');
@@ -82,12 +88,14 @@ function evaluateIdea(values) {
   const weakPoints = getWeakPoints(criteria);
   const nextSteps = getNextSteps(criteria, values.ideaName);
   const recommendation = getRecommendation(score);
+  const productExpansion = getProductExpansion(criteria, values, score);
 
   return {
     score,
     recommendation,
     weakPoints,
     nextSteps,
+    productExpansion,
     explanation: getExplanation(score, recommendation.label, values.ideaName),
   };
 }
@@ -196,6 +204,86 @@ function getNextSteps(criteria, ideaName) {
   return steps;
 }
 
+
+function getConfidenceLevel(confidence) {
+  if (confidence <= 4) {
+    return 'low';
+  }
+
+  if (confidence <= 6) {
+    return 'medium';
+  }
+
+  return 'high';
+}
+
+function getProductExpansion(criteria, values, score) {
+  const name = values.ideaName || 'this idea';
+  const audience = values.targetAudience || 'the target audience';
+  const problem = values.userPain || 'the stated problem';
+  const confidenceLevel = getConfidenceLevel(criteria.confidence);
+  const shouldValidateFirst = confidenceLevel !== 'high' || score < 70;
+
+  const suggestedMvp = shouldValidateFirst
+    ? `Do not start with a full product. First make a simple proof of demand for ${audience}: a landing page, manual service, or clickable demo that promises one narrow solution to ${problem}. Only build the smallest working version after people show real interest.`
+    : `Build one narrow workflow for ${audience}: help them solve the main pain described, with one clear outcome, no extra dashboards, no automation beyond what is needed, and a simple way to request feedback or payment.`;
+
+  const futureFeatures = shouldValidateFirst
+    ? [
+        'A lightweight self-serve version after manual tests prove repeated demand.',
+        'Progress tracking or saved history only if users return more than once.',
+        'Integrations, templates, or automation after users clearly ask for faster workflow support.',
+      ]
+    : [
+        'Personalized recommendations based on the user\'s past inputs or results.',
+        'Saved projects, progress tracking, or reminders that help users return.',
+        'Templates, integrations, or sharing tools that reduce setup time for repeat users.',
+      ];
+
+  const userMotivation = `Users might want ${name} if it saves time, lowers effort, or makes ${problem} less frustrating. The risky assumption is that the pain is urgent enough for ${audience} to change behavior or pay, not just say the idea sounds useful.`;
+
+  const marketEntry = shouldValidateFirst
+    ? [
+        'Interview 5–10 people in the target audience before building and look for repeated painful stories, not compliments.',
+        'Post a short problem-focused offer in communities where the audience already asks for help, then track replies or signups.',
+        'Run a manual concierge version for the first users to learn what they actually value before writing more code.',
+      ]
+    : [
+        'Find small communities where the target audience already discusses this pain and offer a focused beta.',
+        'Create a landing page with one clear promise and measure email signups or preorders.',
+        'Reach out directly to people using weaker alternatives and ask them to compare the MVP.',
+      ];
+
+  const keyRisks = [
+    'The audience may agree the problem exists but not feel enough urgency to switch tools or pay.',
+    'Existing alternatives may already solve the painful part well enough.',
+    criteria.monetizationIsVague
+      ? 'The monetization plan is too vague, so demand may not become revenue.'
+      : 'The proposed pricing or business model may not match how users expect to solve this problem.',
+  ];
+
+  const validationQuestions = shouldValidateFirst
+    ? [
+        'Who specifically has this problem often enough that they are already looking for a solution?',
+        'What proof shows they have spent money, time, or effort on this problem before?',
+        'What is the smallest manual test that would make you more confident before building seriously?',
+      ]
+    : [
+        'What exact action should a first-time user complete in the MVP to receive value?',
+        'What result would prove users prefer this over their current workaround?',
+        'What price, signup, or usage signal would make the idea worth continuing?',
+      ];
+
+  return {
+    suggestedMvp,
+    futureFeatures,
+    userMotivation,
+    marketEntry,
+    keyRisks,
+    validationQuestions,
+  };
+}
+
 function renderList(element, items) {
   element.innerHTML = '';
 
@@ -213,6 +301,12 @@ function renderResults(evaluation) {
   explanationOutput.textContent = evaluation.explanation;
   renderList(weakPointsOutput, evaluation.weakPoints);
   renderList(nextStepsOutput, evaluation.nextSteps);
+  suggestedMvpOutput.textContent = evaluation.productExpansion.suggestedMvp;
+  renderList(futureFeaturesOutput, evaluation.productExpansion.futureFeatures);
+  userMotivationOutput.textContent = evaluation.productExpansion.userMotivation;
+  renderList(marketEntryOutput, evaluation.productExpansion.marketEntry);
+  renderList(keyRisksOutput, evaluation.productExpansion.keyRisks);
+  renderList(validationQuestionsOutput, evaluation.productExpansion.validationQuestions);
   results.classList.remove('is-hidden');
 }
 
