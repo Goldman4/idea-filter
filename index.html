@@ -9,55 +9,115 @@
 <body>
   <main class="page-shell">
     <section class="hero">
-      <p class="eyebrow">First prototype</p>
+      <p class="eyebrow" data-i18n="eyebrow">First prototype</p>
       <h1>Idea Filter</h1>
-      <p class="intro">Evaluate a digital product idea before you spend time building it. Fill in the form, then get a simple score, recommendation, weak points, next steps, and product expansion guidance.</p>
+      <p class="intro" data-i18n="intro">Evaluate a digital product idea before you spend time building it. Fill in the form, then get a simple score, recommendation, weak points, next steps, product expansion guidance, and market research prompts.</p>
     </section>
 
     <section class="app-card" aria-label="Idea evaluation form">
       <form id="ideaForm" class="idea-form">
-        <div class="field-group">
-          <label for="ideaName">Idea name</label>
-          <input id="ideaName" name="ideaName" type="text" placeholder="English speaking practice bot" required>
+        <div class="field-group language-field">
+          <label for="language" data-i18n="languageLabel">Output language</label>
+          <select id="language" name="language">
+            <option value="en">English</option>
+            <option value="ru">Russian</option>
+          </select>
+          <p class="helper-text" data-i18n="languageHelp">Changes recommendations, explanations, weak points, next steps, product expansion, research assistant, and evidence assessment.</p>
         </div>
 
-        <div class="field-group">
-          <label for="ideaDescription">Idea description</label>
-          <textarea id="ideaDescription" name="ideaDescription" rows="4" placeholder="What will this product do?" required></textarea>
+        <div class="form-section">
+          <div class="section-heading compact">
+            <p class="eyebrow" data-i18n="ideaInputEyebrow">Idea basics</p>
+            <h2 data-i18n="ideaInputTitle">Core idea inputs</h2>
+          </div>
+
+          <div class="field-group">
+            <label for="ideaName" data-i18n="ideaNameLabel">Idea name</label>
+            <input id="ideaName" name="ideaName" type="text" placeholder="English speaking practice bot" required>
+          </div>
+
+          <div class="field-group">
+            <label for="ideaDescription" data-i18n="ideaDescriptionLabel">Idea description</label>
+            <textarea id="ideaDescription" name="ideaDescription" rows="4" placeholder="What will this product do?" required></textarea>
+          </div>
         </div>
 
-        <div class="field-group">
-          <label for="targetAudience">Target audience</label>
-          <input id="targetAudience" name="targetAudience" type="text" placeholder="Beginner English learners" required>
+        <div class="form-section research-inputs">
+          <div class="section-heading compact">
+            <p class="eyebrow" data-i18n="researchEyebrow">Research mode</p>
+            <h2 data-i18n="researchTitle">Market Research Assistant</h2>
+          </div>
+
+          <div class="field-group">
+            <label for="researchProductIdea" data-i18n="researchProductIdeaLabel">Product idea</label>
+            <textarea id="researchProductIdea" name="researchProductIdea" rows="3" placeholder="A bot that helps learners practice spoken English every day"></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="targetAudience" data-i18n="targetAudienceLabel">Target audience</label>
+            <input id="targetAudience" name="targetAudience" type="text" placeholder="Beginner English learners" required>
+          </div>
+
+          <div class="field-group">
+            <label for="userPain" data-i18n="userPainLabel">User pain or problem</label>
+            <textarea id="userPain" name="userPain" rows="3" placeholder="What painful problem does this solve?" required></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="monetization" data-i18n="monetizationLabel">Possible monetization</label>
+            <input id="monetization" name="monetization" type="text" placeholder="Subscription, one-time payment, course upsell" required>
+          </div>
         </div>
 
-        <div class="field-group">
-          <label for="userPain">User pain or problem</label>
-          <textarea id="userPain" name="userPain" rows="3" placeholder="What painful problem does this solve?" required></textarea>
-        </div>
+        <div class="form-section evidence-inputs">
+          <div class="section-heading compact">
+            <p class="eyebrow" data-i18n="evidenceEyebrow">Validation notes</p>
+            <h2 data-i18n="evidenceTitle">Evidence</h2>
+          </div>
 
-        <div class="field-group">
-          <label for="monetization">Possible monetization</label>
-          <input id="monetization" name="monetization" type="text" placeholder="Subscription, one-time payment, course upsell" required>
+          <div class="field-group">
+            <label for="searchDemandEvidence" data-i18n="searchDemandLabel">Search demand findings</label>
+            <textarea id="searchDemandEvidence" name="searchDemandEvidence" rows="2" placeholder="Search volume, autocomplete patterns, repeated questions..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="competitorEvidence" data-i18n="competitorEvidenceLabel">Competitor findings</label>
+            <textarea id="competitorEvidence" name="competitorEvidence" rows="2" placeholder="Direct alternatives, pricing, positioning, gaps..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="reviewEvidence" data-i18n="reviewEvidenceLabel">User review findings</label>
+            <textarea id="reviewEvidence" name="reviewEvidence" rows="2" placeholder="Complaints, praise, Reddit/forum quotes, feature requests..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="pricingEvidence" data-i18n="pricingEvidenceLabel">Payment or pricing evidence</label>
+            <textarea id="pricingEvidence" name="pricingEvidence" rows="2" placeholder="Prices users already pay, preorders, paid tests..."></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="personalObservations" data-i18n="personalObservationsLabel">Personal observations</label>
+            <textarea id="personalObservations" name="personalObservations" rows="2" placeholder="Conversations, your own workflow, community observations..."></textarea>
+          </div>
         </div>
 
         <div class="slider-grid">
           <div class="field-group range-field">
-            <label for="personalInterest">Personal interest: <span id="interestValue">5</span>/10</label>
+            <label for="personalInterest"><span data-i18n="interestLabel">Personal interest</span>: <span id="interestValue">5</span>/10</label>
             <input id="personalInterest" name="personalInterest" type="range" min="1" max="10" value="5">
           </div>
 
           <div class="field-group range-field">
-            <label for="confidence">Information confidence: <span id="confidenceValue">5</span>/10</label>
+            <label for="confidence"><span data-i18n="confidenceLabel">Information confidence</span>: <span id="confidenceValue">5</span>/10</label>
             <input id="confidence" name="confidence" type="range" min="1" max="10" value="5">
           </div>
         </div>
 
-        <button type="submit">Evaluate idea</button>
+        <button type="submit" data-i18n="evaluateButton">Evaluate idea</button>
       </form>
 
       <aside id="results" class="results is-hidden" aria-live="polite">
-        <p class="eyebrow">Result</p>
+        <p class="eyebrow" data-i18n="resultEyebrow">Result</p>
         <div class="score-row">
           <span id="score" class="score">0</span>
           <span class="score-label">/100</span>
@@ -65,51 +125,32 @@
         <h2 id="recommendation">Recommendation</h2>
         <p id="explanation" class="explanation"></p>
 
-        <div class="result-list">
-          <h3>Weak points</h3>
-          <ul id="weakPoints"></ul>
-        </div>
-
-        <div class="result-list">
-          <h3>Next steps</h3>
-          <ul id="nextSteps"></ul>
-        </div>
+        <div class="result-list"><h3 data-i18n="weakPointsTitle">Weak points</h3><ul id="weakPoints"></ul></div>
+        <div class="result-list"><h3 data-i18n="nextStepsTitle">Next steps</h3><ul id="nextSteps"></ul></div>
+        <div class="result-list"><h3 data-i18n="assumptionsTitle">Assumptions</h3><ul id="assumptions"></ul></div>
+        <div class="result-list"><h3 data-i18n="marketSignalsTitle">Market signals</h3><ul id="marketSignals"></ul></div>
+        <div class="result-list"><h3 data-i18n="validationNeededTitle">Validation still needed</h3><ul id="validationNeeded"></ul></div>
+        <div class="result-list evidence-assessment"><h3 data-i18n="evidenceAssessmentTitle">Evidence Assessment</h3><p id="evidenceSummary"></p><ul id="evidenceFeedback"></ul></div>
 
         <section class="product-expansion" aria-labelledby="productExpansionTitle">
-          <div class="section-heading">
-            <p class="eyebrow">Creator lens</p>
-            <h3 id="productExpansionTitle">Product Expansion</h3>
-          </div>
+          <div class="section-heading"><p class="eyebrow" data-i18n="creatorLensEyebrow">Creator lens</p><h3 id="productExpansionTitle" data-i18n="productExpansionTitle">Product Expansion</h3></div>
+          <div class="expansion-card"><h4 data-i18n="suggestedMvpTitle">Suggested MVP</h4><p id="suggestedMvp"></p></div>
+          <div class="expansion-card"><h4 data-i18n="futureFeaturesTitle">Future features</h4><ul id="futureFeatures"></ul></div>
+          <div class="expansion-card"><h4 data-i18n="userMotivationTitle">User motivation</h4><p id="userMotivation"></p></div>
+          <div class="expansion-card"><h4 data-i18n="marketEntryTitle">Market entry</h4><ul id="marketEntry"></ul></div>
+          <div class="expansion-card risk-card"><h4 data-i18n="keyRisksTitle">Key risks</h4><ul id="keyRisks"></ul></div>
+          <div class="expansion-card validation-card"><h4 data-i18n="validationQuestionsTitle">Validation questions</h4><ul id="validationQuestions"></ul></div>
+        </section>
 
-          <div class="expansion-card">
-            <h4>Suggested MVP</h4>
-            <p id="suggestedMvp"></p>
-          </div>
-
-          <div class="expansion-card">
-            <h4>Future features</h4>
-            <ul id="futureFeatures"></ul>
-          </div>
-
-          <div class="expansion-card">
-            <h4>User motivation</h4>
-            <p id="userMotivation"></p>
-          </div>
-
-          <div class="expansion-card">
-            <h4>Market entry</h4>
-            <ul id="marketEntry"></ul>
-          </div>
-
-          <div class="expansion-card risk-card">
-            <h4>Key risks</h4>
-            <ul id="keyRisks"></ul>
-          </div>
-
-          <div class="expansion-card validation-card">
-            <h4>Validation questions</h4>
-            <ul id="validationQuestions"></ul>
-          </div>
+        <section class="market-research-output" aria-labelledby="marketResearchOutputTitle">
+          <div class="section-heading"><p class="eyebrow" data-i18n="researchPlanEyebrow">No API research plan</p><h3 id="marketResearchOutputTitle" data-i18n="researchOutputTitle">Market Research Assistant</h3></div>
+          <div class="expansion-card"><h4 data-i18n="demandQueriesTitle">5 Google search queries to research demand</h4><ul id="demandQueries"></ul></div>
+          <div class="expansion-card"><h4 data-i18n="trendsQueriesTitle">3 Google Trends query suggestions</h4><ul id="trendsQueries"></ul></div>
+          <div class="expansion-card"><h4 data-i18n="competitorQueriesTitle">5 competitor search queries</h4><ul id="competitorQueries"></ul></div>
+          <div class="expansion-card"><h4 data-i18n="reviewQueriesTitle">5 review/reddit/forum research queries</h4><ul id="reviewQueries"></ul></div>
+          <div class="expansion-card"><h4 data-i18n="competitorChecklistTitle">Competitor comparison checklist</h4><ul id="competitorChecklist"></ul></div>
+          <div class="expansion-card validation-card"><h4 data-i18n="evidenceToCollectTitle">Evidence to collect before trusting the idea</h4><ul id="evidenceToCollect"></ul></div>
+          <div class="expansion-card risk-card"><h4 data-i18n="researchRedFlagsTitle">Red flags that would make the idea weaker</h4><ul id="researchRedFlags"></ul></div>
         </section>
       </aside>
     </section>
